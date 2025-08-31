@@ -3,12 +3,12 @@ const { Schema } = mongoose
 
 
 const taskSchema = new Schema({
-    title: String,
+    title: { type: String, required: true},
     description: String,
-    status: {type: String, default:'pending'},
+    status: {type: String, enum: [ 'pending', 'in-progress', 'completed' ], default:'pending'},
     user: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User", required: true
     }
 })
 

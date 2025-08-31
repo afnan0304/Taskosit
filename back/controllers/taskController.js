@@ -5,11 +5,25 @@ export const getAllDAta = async (req, res) =>{
     
     try{
 
-        const tasks = await Task.find()
-        res.status(201).json(tasks)
+        const { status, sort} = req.query
+        const filter = { user: req.uer.userId }
+
+        if(status){
+            filter.status = status
+        }
+
+        let query = Task.find(filter)
+
+        if(sort){
+            query = query.sort(sort)
+        }
+
+        const tasks = await query.exec()
+        res.json(tasks)
+
     }
     catch(err){
-        res.status(500).json({'Error': 'Failed To Load!'})
+        res.status(500).json({'Error': 'Failed To fetch tasks!', error: err.message})
         console.log(err)
     }
 }
