@@ -5,11 +5,18 @@ export const getAllDAta = async (req, res) =>{
     
     try{
 
-        const { status, sort, page, limit} = req.query
+        const { status, sort, search, page, limit} = req.query
         const filter = { user: req.uer.userId }
 
         if(status){
             filter.status = status
+        }
+
+        if(search){
+            filter.$or = [
+                { title: { $regex: search, $options: 'i'}},
+                { description: { $regex: search, $options: 'i'}}
+            ]
         }
 
         let query = Task.find(filter)
