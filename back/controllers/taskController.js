@@ -5,7 +5,7 @@ export const getAllDAta = async (req, res) =>{
     
     try{
 
-        const { status, sort} = req.query
+        const { status, sort, page, limit} = req.query
         const filter = { user: req.uer.userId }
 
         if(status){
@@ -18,8 +18,19 @@ export const getAllDAta = async (req, res) =>{
             query = query.sort(sort)
         }
 
+        const skip = ( parseInt(page) - 1) * parseInt(limit)
+        query = query.skip(skip).limit(parseInt(limit))
+
         const tasks = await query.exec()
-        res.json(tasks)
+        const total = await query.countDocuments(filter) 
+
+        
+        res.json({
+            tasks,
+            total,
+            page: parseInt(page),
+            pages: Math.ceil(total / parseInt(limit))
+        })
 
     }
     catch(err){
