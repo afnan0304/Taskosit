@@ -1,0 +1,21 @@
+{
+  "name": "task-manager",
+  "private": true,
+  "workspaces": [
+    "back",
+    "front"
+  ],
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "postinstall": "pnpm -C back install && pnpm -C front install",
+    "dev:back": "pnpm -C back dev",
+    "dev:front": "pnpm -C front dev",
+    "dev": "concurrently \"pnpm -C back dev\" \"pnpm -C front dev\"",
+    "build": "pnpm -C front build",
+    "start": "pnpm -C back start",
+    "lint": "pnpm -C front lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

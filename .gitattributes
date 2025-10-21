@@ -1,0 +1,13 @@
+* text=auto eol=lf
+
+# Images and binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Mark lockfiles as generated
+pnpm-lock.yaml linguist-generated
+**/pnpm-lock.yaml linguist-generated
