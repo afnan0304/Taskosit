@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiPlus, FiTrash2, FiCalendar, FiLoader, FiCheck, FiClock, FiAlertCircle, FiEdit2 } from 'react-icons/fi'
+import { FiPlus, FiTrash2, FiCalendar, FiLoader, FiCheck, FiClock, FiAlertCircle, FiEdit2, FiSearch } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
 import { getTasks, createTask, updateTask, deleteTask as removeTask, logout } from '../api.js'
 import { Button } from '../components/Button'
@@ -31,6 +31,7 @@ export default function Tasks() {
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
 
   const fetchTasks = async () => {
@@ -106,8 +107,19 @@ export default function Tasks() {
   const [filter, setFilter] = useState(TASK_FILTERS.ALL)
   
   const filteredTasks = tasks.filter(task => {
-    if (filter === TASK_FILTERS.ALL) return true
-    return task.status === filter
+    // Filter by status
+    if (filter !== TASK_FILTERS.ALL && task.status !== filter) return false
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      return (
+        task.title.toLowerCase().includes(query) ||
+        (task.description && task.description.toLowerCase().includes(query))
+      )
+    }
+    
+    return true
   })
 
   if (isLoading) {
@@ -170,6 +182,30 @@ export default function Tasks() {
             </form>
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+              <div className="relative">
+                <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search tasks by title or description..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <span className="text-sm font-medium">Clear</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Filter Tabs */}
           <div className="mb-6">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 inline-flex space-x-2">
@@ -208,17 +244,36 @@ export default function Tasks() {
             {filteredTasks.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
                 <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <FiCheck className="h-12 w-12 text-gray-400" />
+                  {searchQuery ? (
+                    <FiSearch className="h-12 w-12 text-gray-400" />
+                  ) : (
+                    <FiCheck className="h-12 w-12 text-gray-400" />
+                  )}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {tasks.length === 0 ? "No tasks yet" : "No tasks match the selected filter"}
+                  {searchQuery 
+                    ? "No tasks found"
+                    : tasks.length === 0 
+                    ? "No tasks yet" 
+                    : "No tasks match the selected filter"
+                  }
                 </h3>
                 <p className="text-gray-500 mb-6">
-                  {tasks.length === 0 
+                  {searchQuery 
+                    ? `No tasks match "${searchQuery}". Try a different search term.`
+                    : tasks.length === 0 
                     ? "Create your first task to get started on your productivity journey!"
                     : "Try selecting a different filter to view your tasks."
                   }
                 </p>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="btn btn-secondary"
+                  >
+                    Clear Search
+                  </button>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
