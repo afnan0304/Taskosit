@@ -1,11 +1,21 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { FiLogOut, FiCheckSquare, FiCheckCircle, FiUser, FiSettings, FiShield, FiChevronDown, FiHome, FiBarChart2 } from 'react-icons/fi'
-import { getProfile } from '../api'
+import { useState, useEffect, useRef } from "react"
+import { Link, useNavigate, useLocation } from "react-router-dom"
+import {
+  FiLogOut,
+  FiCheckSquare,
+  FiCheckCircle,
+  FiUser,
+  FiSettings,
+  FiShield,
+  FiChevronDown,
+  FiHome,
+  FiBarChart2,
+} from "react-icons/fi"
+import { getProfile } from "../api"
 
 export function Navigation({ onLogout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [userData, setUserData] = useState({ name: '', email: '' })
+  const [userData, setUserData] = useState({ name: "", email: "" })
   const dropdownRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
@@ -19,8 +29,8 @@ export function Navigation({ onLogout }) {
     try {
       const data = await getProfile()
       setUserData({ name: data.name, email: data.email })
-    } catch {
-      // User data not available, will show default
+    } catch (err) {
+      setUserData({ name: "User", email: "Loading..." })
     }
   }
 
@@ -31,29 +41,33 @@ export function Navigation({ onLogout }) {
         setIsDropdownOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
   const mainLinks = [
-    { name: 'Dashboard', href: '/', icon: FiHome },
-    { name: 'Tasks', href: '/tasks', icon: FiCheckSquare },
-    { name: 'Analytics', href: '/analytics', icon: FiBarChart2 },
+    { name: "Dashboard", href: "/", icon: FiHome },
+    { name: "Tasks", href: "/tasks", icon: FiCheckSquare },
+    { name: "Analytics", href: "/analytics", icon: FiBarChart2 },
   ]
 
   const userMenuItems = [
-    { name: 'My Profile', href: '/profile?tab=profile', icon: FiUser },
-    { name: 'Account Settings', href: '/profile?tab=preferences', icon: FiSettings },
-    { name: 'Security', href: '/profile?tab=security', icon: FiShield },
+    { name: "My Profile", href: "/profile?tab=profile", icon: FiUser },
+    {
+      name: "Account Settings",
+      href: "/profile?tab=preferences",
+      icon: FiSettings,
+    },
+    { name: "Security", href: "/profile?tab=security", icon: FiShield },
   ]
 
   // Get user initials for avatar
   const getInitials = (name) => {
-    if (!name) return 'U'
+    if (!name) return "U"
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2)
   }
@@ -84,9 +98,10 @@ export function Navigation({ onLogout }) {
                     to={href}
                     className={`
                       inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                      ${isActive 
-                        ? 'bg-primary-50 text-primary-700' 
-                        : 'text-surface-600 hover:text-surface-900 hover:bg-surface-50'
+                      ${
+                        isActive
+                          ? "bg-primary-50 text-primary-700"
+                          : "text-surface-600 hover:text-surface-900 hover:bg-surface-50"
                       }
                     `}
                   >
@@ -109,21 +124,21 @@ export function Navigation({ onLogout }) {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center text-white text-sm font-semibold shadow-soft-sm">
                   {getInitials(userData.name)}
                 </div>
-                
+
                 {/* User Info - Hidden on mobile */}
                 <div className="hidden sm:block text-left">
                   <p className="text-sm font-semibold text-surface-900">
-                    {userData.name || 'User'}
+                    {userData.name || "User"}
                   </p>
                   <p className="text-xs text-surface-500">
-                    {userData.email || 'Loading...'}
+                    {userData.email || "Loading..."}
                   </p>
                 </div>
 
                 {/* Chevron */}
-                <FiChevronDown 
+                <FiChevronDown
                   className={`h-4 w-4 text-surface-400 transition-transform duration-200 ${
-                    isDropdownOpen ? 'rotate-180' : ''
+                    isDropdownOpen ? "rotate-180" : ""
                   }`}
                 />
               </button>
@@ -139,10 +154,10 @@ export function Navigation({ onLogout }) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-surface-900 truncate">
-                          {userData.name || 'User'}
+                          {userData.name || "User"}
                         </p>
                         <p className="text-xs text-surface-600 truncate">
-                          {userData.email || 'Loading...'}
+                          {userData.email || "Loading..."}
                         </p>
                       </div>
                     </div>
