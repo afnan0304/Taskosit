@@ -18,11 +18,21 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Install deps
-        run: pnpm install --frozen-lockfile
-      - name: Build frontend
-        run: pnpm -C front build
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --network-concurrency 1
+        env:
+          NODE_OPTIONS: "--max_old_space_size=2048"
+          
       - name: Lint frontend
         run: pnpm -C front lint
+        
+      - name: Build frontend
+        run: pnpm -C front build
+        env:
+          NODE_OPTIONS: "--max_old_space_size=3072"
+        
       - name: Validate backend structure
-        run: test -f back/server.js && test -f back/package.json && echo "Backend structure OK"
+        run: |
+          test -f back/server.js && echo "✅ Backend server.js exists"
+          test -f back/package.json && echo "✅ Backend package.json exists"
