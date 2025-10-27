@@ -29,7 +29,7 @@ export function Navigation({ onLogout }) {
     try {
       const data = await getProfile()
       setUserData({ name: data.name, email: data.email })
-    } catch (err) {
+    } catch {
       setUserData({ name: "User", email: "Loading..." })
     }
   }
