@@ -20,12 +20,14 @@ jobs:
           cache: 'pnpm'
       
       - name: Install frontend dependencies
-        run: pnpm install --filter front --frozen-lockfile --network-concurrency 1
+        working-directory: ./front
+        run: pnpm install --frozen-lockfile --network-concurrency 1
         env:
           NODE_OPTIONS: "--max_old_space_size=1024"
           
       - name: Lint frontend
-        run: pnpm -C front lint
+        working-directory: ./front
+        run: pnpm lint
   
   build:
     runs-on: ubuntu-latest
@@ -41,12 +43,14 @@ jobs:
           cache: 'pnpm'
       
       - name: Install frontend dependencies
-        run: pnpm install --filter front --frozen-lockfile --network-concurrency 1
+        working-directory: ./front
+        run: pnpm install --frozen-lockfile --network-concurrency 1
         env:
           NODE_OPTIONS: "--max_old_space_size=1024"
       
       - name: Build frontend
-        run: pnpm -C front build
+        working-directory: ./front
+        run: pnpm build
         env:
           NODE_OPTIONS: "--max_old_space_size=2048"
   
