@@ -1,4 +1,4 @@
-# Taskly — Smart Task Manager
+# Taskosit — Smart Task Manager
 
 A polished full‑stack task manager built with the MERN stack (MongoDB, Express, React, Node.js). Includes authentication, advanced task workflows, analytics, and a modern UI powered by Tailwind.
 
@@ -136,3 +136,4 @@ PRs welcome! Please open an issue to discuss major changes.
 MIT © 2025 [afnan0304](https://github.com/afnan0304)
 
 If this project helps you, please ⭐ it!
+
